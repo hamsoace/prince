@@ -1,0 +1,5 @@
+{
+  "name": "Prince of Peace Academy Payroll System",
+  "description": "A comprehensive payroll management system to handle employee earnings, deductions, and generate detailed reports. It features CRUD functionality, signature capture, and a professional user interface.",
+  "requestFramePermissions": []
+}
