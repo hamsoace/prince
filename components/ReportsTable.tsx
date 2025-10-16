@@ -27,7 +27,7 @@ const ReportsTable: React.FC<ReportsTableProps> = ({ payrolls, onViewDetails, on
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {payrolls.length > 0 ? payrolls.map((payroll) => (
-            <tr key={payroll.id} className="hover:bg-gray-50">
+            <tr key={payroll._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{`${payroll.firstName} ${payroll.lastName}`}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payrollNumber}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.date}</td>
@@ -36,9 +36,9 @@ const ReportsTable: React.FC<ReportsTableProps> = ({ payrolls, onViewDetails, on
               <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">Kshs {payroll.totalDeductions.toFixed(2)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700">Kshs {payroll.netPay.toFixed(2)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                <Button onClick={() => onViewDetails(payroll.id)} variant="secondary" className="text-xs px-2 py-1">View</Button>
-                <Button onClick={() => onEdit(payroll.id)} className="text-xs px-2 py-1">Edit</Button>
-                <Button onClick={() => onDelete(payroll.id)} variant="danger" className="text-xs px-2 py-1">Delete</Button>
+                <Button onClick={() => onViewDetails(payroll._id)} variant="secondary" className="text-xs px-2 py-1">View</Button>
+                <Button onClick={() => onEdit(payroll._id)} className="text-xs px-2 py-1">Edit</Button>
+                <Button onClick={() => onDelete(payroll._id)} variant="danger" className="text-xs px-2 py-1">Delete</Button>
               </td>
             </tr>
           )) : (

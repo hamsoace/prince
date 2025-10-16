@@ -10,7 +10,7 @@ import { usePayroll } from '../hooks/usePayroll';
 interface PayrollFormProps {
   onPayrollAdded?: () => void;
   onPayrollUpdated?: () => void;
-  addPayroll?: (payroll: Omit<Payroll, 'id'>) => void;
+  addPayroll?: (payroll: Omit<Payroll, '_id'>) => void;
   updatePayroll?: (id: string, payroll: Payroll) => void;
   payrollToEdit?: Payroll | null;
 }
@@ -22,7 +22,7 @@ const PayrollForm: React.FC<PayrollFormProps> = ({
   updatePayroll,
   payrollToEdit,
 }) => {
-  const [formData, setFormData] = useState<Omit<Payroll, 'id' | 'grossPay' | 'totalDeductions' | 'netPay'>>(() => 
+  const [formData, setFormData] = useState<Omit<Payroll, '_id' | 'grossPay' | 'totalDeductions' | 'netPay'>>(() => 
     payrollToEdit ? { ...payrollToEdit } : { ...INITIAL_PAYROLL_STATE, payrollNumber: `POP${Math.floor(1000 + Math.random() * 9000)}` }
   );
   const [error, setError] = useState('');
@@ -36,12 +36,10 @@ const PayrollForm: React.FC<PayrollFormProps> = ({
   }, [payrollToEdit]);
 
   const grossPay = useMemo(() => {
-    // FIX: Operator '+' cannot be applied to types 'unknown' and 'number'. Using Object.keys for a type-safe sum reduction.
     return (Object.keys(formData.earnings) as Array<keyof Earnings>).reduce((sum, key) => sum + (formData.earnings[key] || 0), 0);
   }, [formData.earnings]);
 
   const totalDeductions = useMemo(() => {
-    // FIX: Operator '+' cannot be applied to types 'unknown' and 'number'. Using Object.keys for a type-safe sum reduction.
     return (Object.keys(formData.deductions) as Array<keyof Deductions>).reduce((sum, key) => sum + (formData.deductions[key] || 0), 0);
   }, [formData.deductions]);
 
@@ -72,7 +70,7 @@ const PayrollForm: React.FC<PayrollFormProps> = ({
     e.preventDefault();
     setError('');
 
-    if (!isPayrollNumberUnique(formData.payrollNumber, payrollToEdit?.id)) {
+    if (!isPayrollNumberUnique(formData.payrollNumber, payrollToEdit?._id)) {
         setError('Payroll Number must be unique.');
         return;
     }
@@ -85,8 +83,7 @@ const PayrollForm: React.FC<PayrollFormProps> = ({
         return;
     }
 
-
-    const completePayrollData: Omit<Payroll, 'id'> = {
+    const completePayrollData: Omit<Payroll, '_id'> = {
         ...formData,
         grossPay,
         totalDeductions,
@@ -94,7 +91,7 @@ const PayrollForm: React.FC<PayrollFormProps> = ({
     };
 
     if (payrollToEdit && updatePayroll) {
-        updatePayroll(payrollToEdit.id, { ...completePayrollData, id: payrollToEdit.id });
+        updatePayroll(payrollToEdit._id, { ...completePayrollData, _id: payrollToEdit._id });
         onPayrollUpdated?.();
     } else if (addPayroll) {
         addPayroll(completePayrollData);

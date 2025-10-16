@@ -20,6 +20,8 @@ const App: React.FC = () => {
     addPayroll,
     updatePayroll,
     deletePayroll,
+    loading,
+    error,
     getPayrollById,
   } = usePayroll();
 
@@ -56,10 +58,14 @@ const App: React.FC = () => {
     switch (currentView) {
       case 'DASHBOARD':
         return <DashboardPage onPayrollAdded={() => setCurrentView('REPORTS')} addPayroll={addPayroll} />;
-      case 'EDIT_PAYROLL':
-        return selectedPayroll ? <DashboardPage onPayrollUpdated={() => setCurrentView('REPORTS')} payrollToEdit={selectedPayroll} updatePayroll={updatePayroll} /> : <ReportsPage payrolls={payrolls} onNavigate={navigate} onViewDetails={handleViewDetails} onEdit={handleEdit} onDelete={deletePayroll} />;
+      case 'EDIT_PAYROLL':        
+        if (!selectedPayroll) {
+          setCurrentView('REPORTS'); // Navigate back to reports if no payroll is selected for editing
+          return null; // Or render an error message/loading state
+        }
+ return <DashboardPage onPayrollUpdated={() => setCurrentView('REPORTS')} payrollToEdit={selectedPayroll} updatePayroll={updatePayroll} />;
       case 'REPORTS':
-        return <ReportsPage payrolls={payrolls} onNavigate={navigate} onViewDetails={handleViewDetails} onEdit={handleEdit} onDelete={deletePayroll} />;
+ return <ReportsPage payrolls={payrolls} onNavigate={navigate} onViewDetails={handleViewDetails} onEdit={handleEdit} onDelete={deletePayroll} loading={loading} error={error} />;
       case 'REPORT_DETAIL':
         return selectedPayroll ? <ReportDetailPage payroll={selectedPayroll} onBack={() => setCurrentView('REPORTS')} /> : <p>Payroll not found.</p>;
       default:

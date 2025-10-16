@@ -1,4 +1,3 @@
-
 import { type Payroll } from '../types';
 
 const API_BASE_URL = 'https://prince-backend-0qch.onrender.com/api';
@@ -17,7 +16,7 @@ export const getAllPayrolls = async (): Promise<Payroll[]> => {
 /**
  * Adds a new payroll record to the database via the server.
  */
-export const addPayrollToDb = async (newPayrollData: Omit<Payroll, 'id'>): Promise<Payroll> => {
+export const addPayrollToDb = async (newPayrollData: Omit<Payroll, '_id'>): Promise<Payroll> => {
     const response = await fetch(`${API_BASE_URL}/payrolls`, {
         method: 'POST',
         headers: {
@@ -35,8 +34,10 @@ export const addPayrollToDb = async (newPayrollData: Omit<Payroll, 'id'>): Promi
  * Updates an existing payroll record on the server.
  */
 export const updatePayrollInDb = async (updatedPayroll: Payroll): Promise<Payroll> => {
-    const response = await fetch(`${API_BASE_URL}/payrolls/${updatedPayroll.id}`,
-    {
+    if (!updatedPayroll._id) {
+        throw new Error('Payroll ID is required for update');
+    }
+    const response = await fetch(`${API_BASE_URL}/payrolls/${updatedPayroll._id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

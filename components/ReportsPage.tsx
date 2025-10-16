@@ -11,9 +11,11 @@ interface ReportsPageProps {
   onViewDetails: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  loading: boolean;
+  error: string | null;
 }
 
-const ReportsPage: React.FC<ReportsPageProps> = ({ payrolls, onViewDetails, onEdit, onDelete }) => {
+const ReportsPage: React.FC<ReportsPageProps> = ({ payrolls, onViewDetails, onEdit, onDelete, loading, error }) => {
   const [filter, setFilter] = useState({ month: '', year: '' });
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +32,11 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ payrolls, onViewDetails, onEd
   }, [payrolls, filter]);
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Payroll Reports</h2>
+      {loading && <p>Loading reports...</p>}
+      {error && <p className="text-red-500">Error: {error}</p>}
+      {!loading && !error && (
       <Card>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-md">
             <Input id="monthFilter" name="month" label="Filter by Month" placeholder="e.g., July" value={filter.month} onChange={handleFilterChange} />
@@ -44,6 +49,7 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ payrolls, onViewDetails, onEd
           onDelete={onDelete}
         />
       </Card>
+      )}
     </div>
   );
 };
